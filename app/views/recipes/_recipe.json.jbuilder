@@ -5,3 +5,4 @@ json.ingredients recipe.ingredients
 json.instructions recipe.instructions
 json.difficulty recipe.difficulty
 json.photo_url recipe.photo_url
+json.date_submitted recipe.date_submitted
