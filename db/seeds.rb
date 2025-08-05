@@ -1,3 +1,5 @@
+Recipe.delete_all
+
 Recipe.create!([
   {
     title: "Grandma's Chocolate Chip Cookies",
