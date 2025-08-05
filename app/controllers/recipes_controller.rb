@@ -1,12 +1,11 @@
 class RecipesController < ApplicationController
   def index
-    @recipes = Recipe.all
-
-    render :index
+    recipes = Recipe.all
+    render json: recipes
   end
 
   def create
-    @recipe = Recipe.create(
+    recipe = Recipe.create(
       title: params[:title],
       submitted_by: params[:submitted_by],
       ingredients: params[:ingredients],
@@ -15,40 +14,54 @@ class RecipesController < ApplicationController
       photo_url: params[:photo_url]
     )
 
-    if @recipe.valid?
-      render :show
+    if recipe.valid?
+      render json: recipe, status: :created
     else
-      render json: { errors: @recipe.errors.full_messages }, status: 422
+      render json: { errors: recipe.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   def show
-    @recipe = Recipe.find_by(id: params[:id])
+    recipe = Recipe.find_by(id: params[:id])
 
-    render :show
+    if recipe
+      render json: recipe
+    else
+      render json: { error: "Recipe not found" }, status: :not_found
+    end
   end
 
   def update
-    @recipe = Recipe.find_by(id: params[:id])
+    recipe = Recipe.find_by(id: params[:id])
 
-    @recipe.update(
-      title: params[:title] || @recipe.title,
-      submitted_by: params[:submitted_by] || @recipe.submitted_by,
-      ingredients: params[:ingredients] || @recipe.ingredients,
-      instructions: params[:instructions] || @recipe.instructions,
-      difficulty: params[:difficulty] || @recipe.difficulty,
-      photo_url: params[:photo_url] || @recipe.photo_url
-    )
-    if @recipe.valid?
-      render :show
+    if recipe
+      recipe.update(
+        title: params[:title] || recipe.title,
+        submitted_by: params[:submitted_by] || recipe.submitted_by,
+        ingredients: params[:ingredients] || recipe.ingredients,
+        instructions: params[:instructions] || recipe.instructions,
+        difficulty: params[:difficulty] || recipe.difficulty,
+        photo_url: params[:photo_url] || recipe.photo_url
+      )
+
+      if recipe.valid?
+        render json: recipe
+      else
+        render json: { errors: recipe.errors.full_messages }, status: :unprocessable_entity
+      end
     else
-      render json: { errors: @recipe.errors.full_messages }, status: 422
+      render json: { error: "Recipe not found" }, status: :not_found
     end
   end
 
   def destroy
-    @recipe = Recipe.find_by(id: params[:id])
-    @recipe.destroy
-    render json: { message: "Recipe deleted!"}
+    recipe = Recipe.find_by(id: params[:id])
+
+    if recipe
+      recipe.destroy
+      render json: { message: "Recipe deleted!" }
+    else
+      render json: { error: "Recipe not found" }, status: :not_found
+    end
   end
 end
