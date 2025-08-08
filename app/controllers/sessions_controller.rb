@@ -12,8 +12,8 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    cookies.delete(:user_id, cookie_settings)
-    render json: { message: "Until next time!" }
+    reset_session
+    render json: { message: "Until next time!" }, status: :ok
   end
 
   private

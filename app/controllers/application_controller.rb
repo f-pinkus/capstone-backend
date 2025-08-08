@@ -1,10 +1,8 @@
 class ApplicationController < ActionController::API
-  protect_from_forgery with: :exception, unless: -> { request.format.json? }
+  include ActionController::Cookies
 
   helper_method :current_user
-
-  skip_before_action :verify_authenticity_token
-
+  
   def current_user
     User.find_by(id: cookies.signed[:user_id])
   end
