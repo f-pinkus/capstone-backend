@@ -5,16 +5,17 @@ class RecipesController < ApplicationController
   end
 
   def create
-    recipe = Recipe.create(
-      title: params[:title],
-      submitted_by: params[:submitted_by],
-      ingredients: params[:ingredients],
-      instructions: params[:instructions],
-      difficulty: params[:difficulty],
-      photo_url: params[:photo_url]
-    )
+    recipe = current_user.recipes.build(recipe_params)
+    # recipe = Recipe.create(
+    #   title: params[:title],
+    #   submitted_by: params[:submitted_by],
+    #   ingredients: params[:ingredients],
+    #   instructions: params[:instructions],
+    #   difficulty: params[:difficulty],
+    #   photo_url: params[:photo_url]
+    # )
 
-    if recipe.valid?
+    if recipe.save?
       render json: recipe, status: :created
     else
       render json: { errors: recipe.errors.full_messages }, status: :unprocessable_entity
