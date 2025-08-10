@@ -20,14 +20,16 @@ class RecipesController < ApplicationController
   end
 
   def show
-    recipe = Recipe.find_by(id: params[:id])
+  recipe = Recipe.find_by(id: params[:id])
 
-    if recipe
-      render json: recipe
-    else
-      render json: { error: "Recipe not found" }, status: :not_found
-    end
+  if recipe
+    favorited = current_user && current_user.favorites.exists?(recipe_id: recipe.id)
+
+    render json: recipe.as_json.merge(favorited_by_current_user: favorited)
+  else
+    render json: { error: "Recipe not found" }, status: :not_found
   end
+end
 
   def update
     if @recipe.update(recipe_params)
