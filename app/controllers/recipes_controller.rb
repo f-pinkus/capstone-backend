@@ -1,4 +1,6 @@
 class RecipesController < ApplicationController
+  # before_action :require_login, only: [:my_recipes]
+
   def index
     recipes = Recipe.all
     render json: recipes
@@ -15,7 +17,7 @@ class RecipesController < ApplicationController
     #   photo_url: params[:photo_url]
     # )
 
-    if recipe.save?
+    if recipe.save
       render json: recipe, status: :created
     else
       render json: { errors: recipe.errors.full_messages }, status: :unprocessable_entity
@@ -64,5 +66,16 @@ class RecipesController < ApplicationController
     else
       render json: { error: "Recipe not found" }, status: :not_found
     end
+  end
+
+  def my_recipes
+    recipes = current_user.recipes
+    render json: recipes
+  end
+
+  private
+
+  def recipe_params
+    params.permit(:title, :submitted_by, :ingredients, :instructions, :difficulty, :photo_url)
   end
 end

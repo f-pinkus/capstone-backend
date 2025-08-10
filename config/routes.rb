@@ -5,4 +5,8 @@ Rails.application.routes.draw do
 
   post "/login" => "sessions#create"
   delete "/logout" => "sessions#destroy"
+
+  get "/me" => "users#me"
+
+  get "/my_recipes" => "recipes#my_recipes"
 end

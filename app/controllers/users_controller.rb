@@ -12,4 +12,17 @@ class UsersController < ApplicationController
       render json: { errors: user.errors.full_messages }, status: :bad_request
     end
   end
+
+  def me
+    if cookies.signed[:user_id]
+      user = User.find_by(id: cookies.signed[:user_id])
+      if user
+        render json: { name: user.name, email: user.email, user_id: user.id }
+      else
+        render json: {}, status: :unauthorized
+      end
+    else
+      render json: {}, status: :unauthorized
+    end
+  end
 end
