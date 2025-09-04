@@ -68,6 +68,6 @@ end
     # params.require(:recipe).permit(:title, :submitted_by, :ingredients, :instructions, :difficulty, :photo_url)
 
     # If params are flat (no nested recipe key), use this:
-    params.permit(:title, :submitted_by, :ingredients, :instructions, :difficulty, :photo_url)
+    params.permit(:title, :submitted_by, :ingredients, :instructions, :difficulty, :photo_url, :id, :recipe)
   end
 end
